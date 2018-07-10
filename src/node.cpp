@@ -1,10 +1,10 @@
 #include "node.hpp"
 
-const int Node::MaxGeneration(12);
-const float Node::MaxLengthLimit(400.0);
-const float Node::MinLengthLimit(10.0);
-const float Node::MaxThicknessLimit(10.0);
-const float Node::MinThicknessLimit(0.0);
+const int Node::MaxGeneration = 13;
+const float Node::MaxLengthLimit = 500.0;
+const float Node::MinLengthLimit = 10.0;
+const float Node::MaxThicknessLimit = 10.0;
+const float Node::MinThicknessLimit = 0.0;
 
 Node::Node(const shared_ptr<Node>& parent) : mParent(parent) { setup(); }
 

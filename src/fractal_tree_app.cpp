@@ -1,9 +1,20 @@
 #include "fractal_tree_app.hpp"
 
-void FractalTreeApp::setup() { ofBackground(ofColor::black); }
+void FractalTreeApp::setup() {
+    ofBackground(ofColor::black);
+    
+    gui.setup();
+    gui.add(cameraPosition.set("camera position", ofPoint(0, 0, 0), ofPoint(0, 0, 0), ofPoint(1000, 1000, 1000)));
+    gui.add(lightPosition.set("light position", ofPoint(0, 0, 0), ofPoint(0, 0, 0), ofPoint(1000, 1000, 1000)));
+
+    cameraPosition.addListener(this, &FractalTreeApp::cameraPositionUpdated);
+    lightPosition.addListener(this, &FractalTreeApp::lightPositionUpdated);
+}
 
 void FractalTreeApp::update() {
-    for (auto& tree : mTrees) tree->update();
+    if (mTree) {
+        mTree->update();
+    }
 }
 
 void FractalTreeApp::draw() {
@@ -13,29 +24,37 @@ void FractalTreeApp::draw() {
     mCamera.begin();
     mLight.enable();
 
-    for (const auto& tree : mTrees) tree->draw();
+    if (mTree) {
+        mTree->draw();
+    }
 
     mLight.disable();
     mCamera.end();
 
     ofDisableDepthTest();
     ofDisableLighting();
+
+    gui.draw();
 }
 
 void FractalTreeApp::keyPressed(int key) {
     if (key == ' ') {
-        random_device seed;
-        mt19937 generator(seed());
-        uniform_real_distribution<float> distribution(-100, 100);
-
-        auto root = make_shared<Node>();
-        root->setGeneration(0);
-        root->setLength(Node::MaxLengthLimit);
-        root->setThickness(Node::MaxThicknessLimit);
-        root->setPosition(
-            ofPoint(distribution(generator), 0.0, distribution(generator)));
-        root->setDirection(ofPoint(0.0, 1.0, 0.0));
-
-        mTrees.push_back(move(root));
+        mTree = make_shared<Node>();
+        mTree->setGeneration(0);
+        mTree->setLength(Node::MaxLengthLimit);
+        mTree->setThickness(Node::MaxThicknessLimit);
+        mTree->setPosition(ofPoint(0.0, 0.0, 0.0));
+        mTree->setDirection(ofPoint(0.0, 1.0, 0.0));
     }
+}
+
+void FractalTreeApp::cameraPositionUpdated(ofPoint& cameraPosition) 
+{
+    mCamera.setPosition(cameraPosition);
+    mCamera.setTarget(ofPoint(0, 1000, 0));
+}
+
+void FractalTreeApp::lightPositionUpdated(ofPoint& lightPosition) 
+{
+    mLight.setPosition(lightPosition);
 }
