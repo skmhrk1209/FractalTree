@@ -13,13 +13,6 @@ class FractalTreeApp : public ofBaseApp {
     void draw();
     void keyPressed(int);
 
-    void cameraPositionUpdated(ofPoint&);
-    void lightPositionUpdated(ofPoint&);
-
-    ofxPanel gui;
-    ofParameter<ofPoint> cameraPosition;
-    ofParameter<ofPoint> lightPosition;
-
    private:
     ofEasyCam mCamera;
     ofLight mLight;
